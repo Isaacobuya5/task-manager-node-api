@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require("validator");
 
 // We need connectionURL to connect to MongoDB
 const connectionURL = "mongodb://127.0.0.1:27017/task-manager-api";
@@ -13,11 +14,23 @@ mongoose.connect(connectionURL, {
 // defining our model
 // two arguements - name for our model and definition of fields
 // mongoose does not provide us with all kinds of validation but it provides us with ability to provide custom validation
+// for complex validation it is reccommended to use a well tested library
+// e.g. validator.js
 const User = mongoose.model('User', {
     name: {
         type: String,
         // set up validation
         required: true // value for this field must be provided
+    },
+    email: {
+        type: String,
+        required: true,
+        validate(value) {
+            // example using a validation library
+            if (!validator.isEmail(value)) {
+                throw new Error("Email is invalid");
+            }
+        }
     },
     age: {
         type: Number,
@@ -32,8 +45,9 @@ const User = mongoose.model('User', {
 
 // create an instance of the model
 const me = new User({
-    name: "Isaac Obuya",
-    age: -2
+    name: "John Doe",
+    email: "Isaac@gmail.com",
+    age: 25
 });
 
 // we use methods to save and  perform other crud operations
