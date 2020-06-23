@@ -12,30 +12,39 @@ mongoose.connect(connectionURL, {
 
 // defining our model
 // two arguements - name for our model and definition of fields
+// mongoose does not provide us with all kinds of validation but it provides us with ability to provide custom validation
 const User = mongoose.model('User', {
     name: {
-        type: String
+        type: String,
+        // set up validation
+        required: true // value for this field must be provided
     },
     age: {
-        type: Number
+        type: Number,
+        // set up custom validator here
+        validate(value) {
+            if (value < 0) {
+                throw new Error('Age must be a positive number');
+            }
+        }
     }
 });
 
 // create an instance of the model
 const me = new User({
     name: "Isaac Obuya",
-    age: 24
+    age: -2
 });
 
 // we use methods to save and  perform other crud operations
-// me.save().then((me) => {
-//     // if succeeds we get access to our model instance
-//     console.log(me);
-// }).catch((error) => {
-//     // we get an error if does not succeed
-//     console.log('Error!', error);
+me.save().then((me) => {
+    // if succeeds we get access to our model instance
+    console.log(me);
+}).catch((error) => {
+    // we get an error if does not succeed
+    console.log('Error!', error);
 
-// });
+});
 
 // create model for a task
 const Tasks = mongoose.model('Tasks', {
@@ -54,5 +63,5 @@ const task = new Tasks({
 });
 
 // saving the task
-task.save().then((task) => console.log(task))
-.catch((error) => console.log("Error " + error));
+// task.save().then((task) => console.log(task))
+// .catch((error) => console.log("Error " + error));
