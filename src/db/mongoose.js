@@ -28,11 +28,31 @@ const me = new User({
 });
 
 // we use methods to save and  perform other crud operations
-me.save().then((me) => {
-    // if succeeds we get access to our model instance
-    console.log(me);
-}).catch((error) => {
-    // we get an error if does not succeed
-    console.log('Error!', error);
+// me.save().then((me) => {
+//     // if succeeds we get access to our model instance
+//     console.log(me);
+// }).catch((error) => {
+//     // we get an error if does not succeed
+//     console.log('Error!', error);
 
+// });
+
+// create model for a task
+const Tasks = mongoose.model('Tasks', {
+    description: {
+        type: String
+    },
+    completed: {
+        type: Boolean
+    }
 });
+
+// create an instance of task
+const task = new Tasks({
+    description: "Coding in JavaScript",
+    completed: true
+});
+
+// saving the task
+task.save().then((task) => console.log(task))
+.catch((error) => console.log("Error " + error));
