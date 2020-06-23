@@ -45,6 +45,17 @@ const User = mongoose.model('User', {
                 throw new Error('Age must be a positive number');
             }
         }
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 7,
+        trim: true,
+        validate(value) {
+            if (value.toLowerCase().includes("password")) {
+                throw new Error("Password must not contain text 'password' ");
+            }
+        }
     }
 });
 
@@ -52,6 +63,8 @@ const User = mongoose.model('User', {
 const me = new User({
     name: "John Doe",
     email: "  Isaac@gmail.com ",
+    age: 32,
+    password: ' 12345myname'
 });
 
 // we use methods to save and  perform other crud operations
