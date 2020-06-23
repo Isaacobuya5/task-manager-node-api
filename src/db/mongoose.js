@@ -19,11 +19,15 @@ mongoose.connect(connectionURL, {
 const User = mongoose.model('User', {
     name: {
         type: String,
+        // sanitize data
+        trim: true,
         // set up validation
         required: true // value for this field must be provided
     },
     email: {
         type: String,
+        trim: true,
+        lowercase: true,
         required: true,
         validate(value) {
             // example using a validation library
@@ -34,6 +38,7 @@ const User = mongoose.model('User', {
     },
     age: {
         type: Number,
+        default: 0,
         // set up custom validator here
         validate(value) {
             if (value < 0) {
@@ -46,8 +51,7 @@ const User = mongoose.model('User', {
 // create an instance of the model
 const me = new User({
     name: "John Doe",
-    email: "Isaac@gmail.com",
-    age: 25
+    email: "  Isaac@gmail.com ",
 });
 
 // we use methods to save and  perform other crud operations
