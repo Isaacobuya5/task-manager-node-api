@@ -30,18 +30,6 @@ mongoose.connect(connectionURL, {
 
 // });
 
-// create model for a task
-const Tasks = mongoose.model('Tasks', {
-    description: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    }
-});
 
 // create an instance of task
 // const task = new Tasks({
