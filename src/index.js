@@ -33,6 +33,35 @@ app.post('/tasks', (req, res) => {
     }).catch((error) => {
     res.status(400).send(error);       
     })
+});
+
+// fetching multiple users
+app.get('/users', (req, res) => {
+    // fetch all users stored in the database
+    User.find({}).then((users) => {
+        res.status(200).send(users);
+    }).catch((error) => {
+        res.status(500).send(error);
+    })
+});
+
+// express provides us with route parameters
+// part of the Url that are used to capture dynamic values
+app.get('/users/:id', (req, res) => {
+    // need to access the param provided
+    const _id = req.params.id;
+    // fetch the a single user
+    // in mongoose, there are two methods - findOne and findById
+    User.findById(_id).then((user) => {
+    // remember, a mongodb query is not considered a failure if we don't find something
+     if (!user) {
+         console.log("user not found");
+         return res.status(404).send();
+     }       
+     res.send(user); // automatically returns status of 200
+    }).catch((error) => {
+        res.status(500).send();
+    })
 })
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
