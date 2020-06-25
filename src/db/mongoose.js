@@ -6,7 +6,9 @@ const connectionURL = "mongodb://127.0.0.1:27017/task-manager-api";
 // almost same as MongoDB.connect except that we provide also specify database name as part of the URL
 mongoose.connect(connectionURL, {
     useNewUrlParser: true,
-    useCreateIndex: true // ensures that when mongoose is working with mongodb, indexes are created
+    useCreateIndex: true, // ensures that when mongoose is working with mongodb, indexes are created
+    // removes the deprecation wraning for findByIdAndUpdate and other methods
+    useFindAndModify: false
     // allowing us to quickly access the data
 }).then(() => console.log("Succesfully connected")).catch((error) => console.log(error));
 
