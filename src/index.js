@@ -67,6 +67,24 @@ app.get('/users/:id', async (req, res) => {
     }
 });
 
+// updating an existing user
+app.patch('/users/:id', async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true, // return new user as opposed to existing one that was found before
+            runValidators: true // ensure data is validated
+        });
+
+        if (!user) {
+            return res.status(404).send();
+        }
+
+        res.send(user);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+})
+
 // fetch multiple tasks
 app.get('/tasks', (req, res) => {
     Task.find({}).then((tasks) => {
