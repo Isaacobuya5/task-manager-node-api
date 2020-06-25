@@ -13,15 +13,16 @@ const port = process.env.PORT || 3000;
 // we need to configure express to automatically parse for us the 
 // JSON information passed in request body
 app.use(express.json()); // will automatically parse the incoming JSON data into an object that we can the save into database
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
     // grabbing incoming body data
     const user = new User(req.body);
+    try {
     // save the new user
-    user.save().then((user) => {
-        res.status(201).send(user)
-    }).catch((error) => {
+    await user.save();
+    res.status(201).send(user);
+    } catch(error) {
         res.status(400).send(error);
-    })
+    }
 });
 
 // create a new post
