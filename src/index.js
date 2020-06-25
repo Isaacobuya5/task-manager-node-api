@@ -37,13 +37,14 @@ app.post('/tasks', (req, res) => {
 });
 
 // fetching multiple users
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+    try {
     // fetch all users stored in the database
-    User.find({}).then((users) => {
-        res.status(200).send(users);
-    }).catch((error) => {
+     const users = await User.find({});
+     res.status(200).send(users);
+    } catch (error) {
         res.status(500).send(error);
-    })
+    }
 });
 
 // express provides us with route parameters
