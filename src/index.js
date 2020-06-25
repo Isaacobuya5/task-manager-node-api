@@ -69,6 +69,14 @@ app.get('/users/:id', async (req, res) => {
 
 // updating an existing user
 app.patch('/users/:id', async (req, res) => {
+    const updates = Object.keys(req.body);
+    // we don't want to update fields that do not exist
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+    const isValidUpdate = updates.every(update => allowedUpdates.includes(update));
+
+    if (!isValidUpdate) {
+        return res.status(400).send({error: 'Invalid updates'});
+    }
     try {
         const user = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true, // return new user as opposed to existing one that was found before
