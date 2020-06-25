@@ -26,14 +26,14 @@ app.post('/users', async (req, res) => {
 });
 
 // create a new post
-app.post('/tasks', (req, res) => {
+app.post('/tasks', async (req, res) => {
     const task = new Task(req.body);
-
-    task.save().then((task) => {
+    try {
+        await task.save();
         res.status(201).send(task);
-    }).catch((error) => {
+    } catch(error) {
     res.status(400).send(error);       
-    })
+    }
 });
 
 // fetching multiple users
@@ -77,17 +77,18 @@ app.get('/tasks', (req, res) => {
 });
 
 // fetch a single task
-app.get('/tasks/:id', (req, res) => {
+app.get('/tasks/:id', async (req, res) => {
     const _id = req.params.id;
-    Task.findById(_id).then((task) => {
+    try {
+        const task = await Task.findById(_id);
         if (!task) {
             return res.status(404).send();
         }
 
         res.send(task);
-    }).catch((error) => {
+    } catch(error){
         res.status(500).send();
-    })
+    }
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
