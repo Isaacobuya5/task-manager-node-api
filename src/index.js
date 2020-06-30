@@ -29,16 +29,27 @@ app.listen(port, () => console.log(`Server listening on port ${port}`));
  * hashing algorithms are one way i.e. we can't get reverse to get the original value
  * we used bcrypt.compare method to check if password entered matches the hashed password value stored in the database
  */
-const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const myFunction = async () => {
-    const password = "Phesto1996";
-    const hashedPassword = await bcrypt.hash(password, 8);
-    console.log(`password: ${password}`);
-    console.log(`hashed password: ${hashedPassword}`);
+    // const password = "Phesto1996";
+    // const hashedPassword = await bcrypt.hash(password, 8);
+    // console.log(`password: ${password}`);
+    // console.log(`hashed password: ${hashedPassword}`);
 
-    const isPasswordValid = await bcrypt.compare('Phesto1996', hashedPassword);
+    // const isPasswordValid = await bcrypt.compare('Phesto1996', hashedPassword);
 
-    console.log(isPasswordValid);
+    // console.log(isPasswordValid);
+    const token = jwt.sign({ _id: "id123" }, 'thisismyexample', { expiresIn: '2 seconds'});
+    // made up of three parts -
+    // a. base64 json encoded string - known as header
+    // the header contains some meta information about the type of token and the algorithm that was used to generate it
+    // b.  payload/ body - also base64 json encoded string - 
+    // contains the data that we provided which in our case would be the user id
+    // c. signature - used to verify the token
+    console.log(token)
+    // varifying a token
+    const data = jwt.verify(token, 'thisismyexample');
+    console.log(data);
 }
 
 myFunction();
