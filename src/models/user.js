@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
             if (!validator.isEmail(value)) {
                 throw new Error("Email is invalid");
             }
-        }
+        },
+        unique: true
     },
     age: {
         type: Number,
@@ -45,6 +46,26 @@ const userSchema = new mongoose.Schema({
         }
     }
 });
+
+// attach a method to find user by credentials i.e. email and password to the userSchema
+// this therefore gives us a reusable function that we can use
+userSchema.statics.findByCredentials = async (email, password) => {
+    // find a single user with the given email
+    const user = await User.findOne({ email });
+    // if no user is found then we need to throw an error
+    if (!user) {
+        throw new Error('Unable to login');
+    }
+    // if user is found then now we can check if the password match against the one stored in the database
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    // if password do not match
+    if (!isMatch) {
+        throw new Error("Unable to login");
+    }
+    // user is found
+    return user;
+}
 
 // using method to set the schema up
 // two methods that allows us to set middleware
