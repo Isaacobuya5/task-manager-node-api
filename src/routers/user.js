@@ -59,11 +59,21 @@ router.patch('/users/:id', async (req, res) => {
         return res.status(400).send({error: 'Invalid updates'});
     }
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-            new: true, // return new user as opposed to existing one that was found before
-            runValidators: true // ensure data is validated
-        });
-
+        /**
+         * findByIdAndUpdate bypasses certain mongoose functionalities,
+         * it performs a direct operation on the database
+         * that's why we had to set up functionality for running the validators
+         * thus we can replace it with a more traditional way
+         */
+        const user = await User.findById(req.params.id);
+        // above gives us an instance of the user model 
+        updates.forEach(update=> user[update] = req.body[update]);
+        // save the updated user
+        await user.save();
+        // const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        //     new: true, // return new user as opposed to existing one that was found before
+        //     runValidators: true // ensure data is validated
+        // });
         if (!user) {
             return res.status(404).send();
         }
