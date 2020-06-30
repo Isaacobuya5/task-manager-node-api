@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 
 const userSchema = new mongoose.Schema({
@@ -59,7 +60,12 @@ userSchema.pre('save', async function(next) {
     // want to do something before users are saved
     const user = this;
     // we need to hash the password
-    console.log("Perform operation before saving the user");
+    // only hash if it has been modified
+    // the condition below is only true if its a new user or password has been modified
+    if (user.isModified('password')) {
+        // hash the password
+        user.password = await bcrypt.hash(user.password, 8);
+    }
 
     next();
 })
