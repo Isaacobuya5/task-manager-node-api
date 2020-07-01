@@ -51,7 +51,7 @@ router.get('/tasks/:id', auth,  async (req, res) => {
 });
 
 // updating a single task
-router.patch('/tasks/:id', async (req, res) => {
+router.patch('/tasks/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['description', 'completed'];
 
@@ -61,9 +61,8 @@ router.patch('/tasks/:id', async (req, res) => {
         return res.status(400).send({ error: 'Invalid update'})
     }
     try {
-        const task = await Task.findById(req.params.id);
-        updates.forEach(update => task[update] = req.body[update]);
-        await task.save();
+        // const task = await Task.findById(req.params.id);
+        const task = await Task.findOne({_id: req.params.id, owner: req.user._id});
     //    const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
     //     new: true,
     //     runValidators: true
@@ -71,6 +70,9 @@ router.patch('/tasks/:id', async (req, res) => {
        if (!task) {
            return res.status(400).send();
        }
+
+       updates.forEach(update => task[update] = req.body[update]);
+       await task.save();
        res.send(task);
     } catch (error) {
         res.status(400).send(error);
