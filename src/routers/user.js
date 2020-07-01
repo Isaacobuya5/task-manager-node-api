@@ -73,26 +73,26 @@ router.get('/users/me', auth, async (req, res) => res.send(req.user));
 
 // express provides us with route parameters
 // part of the Url that are used to capture dynamic values
-router.get('/users/:id', async (req, res) => {
-    // need to access the param provided
-    const _id = req.params.id;
-    try {
-    // fetch the a single user
-    // in mongoose, there are two methods - findOne and findById
-    const user = await User.findById(_id);
-    // remember, a mongodb query is not considered a failure if we don't find something
-     if (!user) {
-         console.log("user not found");
-         return res.status(404).send();
-     }       
-     res.send(user); // automatically returns status of 200
-    } catch(error) {
-        res.status(500).send();
-    }
-});
+// router.get('/users/:id', async (req, res) => {
+//     // need to access the param provided
+//     const _id = req.params.id;
+//     try {
+//     // fetch the a single user
+//     // in mongoose, there are two methods - findOne and findById
+//     const user = await User.findById(_id);
+//     // remember, a mongodb query is not considered a failure if we don't find something
+//      if (!user) {
+//          console.log("user not found");
+//          return res.status(404).send();
+//      }       
+//      res.send(user); // automatically returns status of 200
+//     } catch(error) {
+//         res.status(500).send();
+//     }
+// });
 
 // updating an existing user
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body);
     // we don't want to update fields that do not exist
     const allowedUpdates = ['name', 'email', 'password', 'age'];
@@ -128,16 +128,16 @@ router.patch('/users/:id', async (req, res) => {
 })
 
 // deleting a user
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/me', auth, async (req, res) => {
 
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
-
-        if (!user) {
-            return res.status(404).send();
-        }
-
-        res.send(user);
+        // const user = await User.findByIdAndDelete(req.params.id);
+        // const user = await User.findByIdAndDelete(req.user._id);
+        // if (!user) {
+        //     return res.status(404).send();
+        // }
+        await req.user.remove();
+        res.send(req.user);
     } catch (error) {
         res.status(500).send(error);
     }
