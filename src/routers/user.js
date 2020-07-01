@@ -32,6 +32,7 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
+// logout of a single session
 router.post('/users/logout', auth, async (req, res) => {
     try {
         // we already have access to the user
@@ -39,6 +40,19 @@ router.post('/users/logout', auth, async (req, res) => {
         await req.user.save();
 
         res.send();
+    } catch (error) {
+        res.status(500).send();
+    }
+})
+
+//logout of all sessions
+router.post("/users/logoutAll", auth, async (req, res) => {
+    try {
+        // clear all of the tokens
+        req.user.tokens = [];
+        await req.user.save();
+        res.send();
+
     } catch (error) {
         res.status(500).send();
     }
