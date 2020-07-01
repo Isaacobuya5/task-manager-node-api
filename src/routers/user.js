@@ -32,6 +32,18 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        // we already have access to the user
+        req.user.tokens = req.user.tokens.filter(token => token.token !== req.token);
+        await req.user.save();
+
+        res.send();
+    } catch (error) {
+        res.status(500).send();
+    }
+})
+
 // fetching multiple users
 // router.get('/users', auth, async (req, res) => {
 //     try {
