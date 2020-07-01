@@ -92,7 +92,7 @@ router.get('/users/me', auth, async (req, res) => res.send(req.user));
 // });
 
 // updating an existing user
-router.patch('/users/:id', auth, async (req, res) => {
+router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body);
     // we don't want to update fields that do not exist
     const allowedUpdates = ['name', 'email', 'password', 'age'];
@@ -108,7 +108,8 @@ router.patch('/users/:id', auth, async (req, res) => {
          * that's why we had to set up functionality for running the validators
          * thus we can replace it with a more traditional way
          */
-        const user = await User.findById(req.params.id);
+        // const user = await User.findById(req.params.id);
+        const user = req.user;
         // above gives us an instance of the user model 
         updates.forEach(update=> user[update] = req.body[update]);
         // save the updated user
@@ -117,9 +118,9 @@ router.patch('/users/:id', auth, async (req, res) => {
         //     new: true, // return new user as opposed to existing one that was found before
         //     runValidators: true // ensure data is validated
         // });
-        if (!user) {
-            return res.status(404).send();
-        }
+        // if (!user) {
+        //     return res.status(404).send();
+        // }
 
         res.send(user);
     } catch (error) {
