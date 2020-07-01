@@ -113,7 +113,7 @@ userSchema.methods.toJSON = function () {
  */
 // this is not stored on the database
  userSchema.virtual('tasks', {
-     ref: 'task',
+     ref: 'Task',
      // the field we want to associate with on this model
      localField: '_id',
      // the field we want to relate to on the other model
