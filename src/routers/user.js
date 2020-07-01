@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require('../models/user');
+const auth = require('../middleware/auth');
 
 // creating a new router
 const router = new express.Router();
@@ -32,15 +33,17 @@ router.post('/users/login', async (req, res) => {
 })
 
 // fetching multiple users
-router.get('/users', async (req, res) => {
-    try {
-    // fetch all users stored in the database
-     const users = await User.find({});
-     res.status(200).send(users);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+// router.get('/users', auth, async (req, res) => {
+//     try {
+//     // fetch all users stored in the database
+//      const users = await User.find({});
+//      res.status(200).send(users);
+//     } catch (error) {
+//         res.status(500).send(error);
+//     }
+// });
+
+router.get('/users/me', auth, async (req, res) => res.send(req.user));
 
 // express provides us with route parameters
 // part of the Url that are used to capture dynamic values
