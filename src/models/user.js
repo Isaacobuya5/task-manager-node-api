@@ -104,6 +104,22 @@ userSchema.methods.toJSON = function () {
     return userObject;
 }
 
+/***
+ * to set up a relationship between a user and tasks,
+ * we set up what is known as a virtual property
+ * it is not an actual data stored in a database but rather a a relationship between two entities
+ * e.g between our user and tasks
+ * Below - provide a way for mongoose to figure out the relationship between user and a task
+ */
+// this is not stored on the database
+ userSchema.virtual('tasks', {
+     ref: 'task',
+     // the field we want to associate with on this model
+     localField: '_id',
+     // the field we want to relate to on the other model
+     foreignField: 'owner'
+ })
+
 // using method to set the schema up
 // two methods that allows us to set middleware
 // a. pre -> for doing something before an event e.g. before validation or saving
