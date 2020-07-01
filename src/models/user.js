@@ -95,6 +95,15 @@ userSchema.methods.generateAuthToken = async function() {
     return token;
 }
 
+// format the user object we get as a response
+userSchema.methods.toJSON = function () {
+    const user = this;
+    const userObject = user.toObject();
+    delete userObject.password;
+    delete userObject.tokens;
+    return userObject;
+}
+
 // using method to set the schema up
 // two methods that allows us to set middleware
 // a. pre -> for doing something before an event e.g. before validation or saving

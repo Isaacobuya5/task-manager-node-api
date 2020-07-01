@@ -68,3 +68,14 @@ app.listen(port, () => console.log(`Server listening on port ${port}`));
 // }
 
 // myFunction();
+
+const pet = {
+    name: "Omieri"
+}
+
+pet.toJSON = function () {
+    console.log(this);
+    return {};
+}
+
+console.log(JSON.stringify(pet));
