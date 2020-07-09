@@ -22,11 +22,31 @@ router.post('/tasks', auth,  async (req, res) => {
 
 
 
-// fetch multiple tasks
+// // fetch multiple tasks
+// router.get('/tasks', auth, async (req, res) => {
+//     try {
+//     // const tasks = await Task.find({ owner: req.user._id });
+//     await req.user.populate('tasks').execPopulate();
+//         res.send(req.user.tasks);
+//     } catch(error) {
+//         console.log(error);
+//         res.status(500).send(error);
+//     }
+// });
+
+// fetch multiple tasks - optional sorting with completed or uncompleted tasks
 router.get('/tasks', auth, async (req, res) => {
+    const match = {}
+
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true';
+    }
     try {
     // const tasks = await Task.find({ owner: req.user._id });
-    await req.user.populate('tasks').execPopulate();
+    await req.user.populate({
+        path: 'tasks',
+        match
+    }).execPopulate();
         res.send(req.user.tasks);
     } catch(error) {
         console.log(error);
