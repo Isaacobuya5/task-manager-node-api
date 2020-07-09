@@ -16,6 +16,8 @@ const taskSchema = new mongoose.Schema({
             // allows us to create a reference from this field to the User model
             ref: 'User'
         }
+}, {
+    timestamps: true
 });
 
 // create model for a task

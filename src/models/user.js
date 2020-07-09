@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
+const Task = require('./task');
 
 
 const userSchema = new mongoose.Schema({
@@ -54,7 +55,11 @@ const userSchema = new mongoose.Schema({
            } 
         }
     ]
-});
+}, {
+    // with this setting - created_at and updated_at fields are created automatically
+    timestamps: true
+}
+);
 
 // attach a method to find user by credentials i.e. email and password to the userSchema
 // this therefore gives us a reusable function that we can use
@@ -141,6 +146,13 @@ userSchema.pre('save', async function(next) {
         user.password = await bcrypt.hash(user.password, 8);
     }
 
+    next();
+})
+
+// middleware that delete user task when user is removed
+userSchema.pre('remove', async function (next) {
+    const user = this;
+    await Task.deleteMany({ owner: user._id });
     next();
 })
 
