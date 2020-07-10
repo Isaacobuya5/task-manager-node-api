@@ -82,7 +82,25 @@ app.listen(port, () => console.log(`Server listening on port ${port}`));
 
 const multer = require('multer');
 const upload = multer({
-    dest: 'images'
+    dest: 'images',
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(req, file, cb) {
+        // three ways we can call the callback
+        // in case of an error
+        // cb(new Error('File must be a PDF'))
+        // // file is valid
+        // cb(undefined, true);
+        // // silently reject file
+        // cb(undefined, false);
+        if (!file.originalname.endsWith('.pdf')) {
+            return cb(new Error('Please upload a PDF'))
+        }
+        // if its a pdf
+        cb(undefined, true);
+
+    }
 });
 
 app.post('/upload', upload.single('upload'), (req, res) => {
