@@ -79,3 +79,12 @@ app.listen(port, () => console.log(`Server listening on port ${port}`));
 // }
 
 // console.log(JSON.stringify(pet));
+
+const multer = require('multer');
+const upload = multer({
+    dest: 'images'
+});
+
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send()
+});
