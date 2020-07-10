@@ -94,8 +94,11 @@ const upload = multer({
         // cb(undefined, true);
         // // silently reject file
         // cb(undefined, false);
-        if (!file.originalname.endsWith('.pdf')) {
-            return cb(new Error('Please upload a PDF'))
+        // if (!file.originalname.endsWith('.pdf')) {
+        //     return cb(new Error('Please upload a PDF'))
+        // }
+        if (!file.originalname.match(/\.(doc|docx)$/)) {
+            return cb(new Error('Please upload a word document'))
         }
         // if its a pdf
         cb(undefined, true);
