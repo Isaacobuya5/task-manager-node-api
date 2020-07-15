@@ -148,7 +148,9 @@ router.delete('/users/me', auth, async (req, res) => {
 
 // configure multer
 const upload = multer({
-    dest: 'avatar',
+    // by removing the dest option from the options config, multer gives us flexibility to do
+    // whatever we want with the image e.g save to file system, database etc
+    // dest: 'avatar',
     limits: {
         fileSize: 1000000
     },
@@ -162,10 +164,19 @@ const upload = multer({
 
 //users/me/avatar
 // save to folder avatar
-router.post('/users/me/avatar',upload.single('avatar') , (req, res) => {
+router.post('/users/me/avatar',auth, upload.single('avatar') , async (req, res) => {
+    // we can access the image on req.file
+     req.user.avatar = req.file.buffer;
+     await req.user.save();
     res.send();
 }, (error,req, res, next) => {
     res.status(400).send({error: error})
-})
+});
+
+router.delete('/users/me/avatar', auth, async (req, res) => {
+    req.user.avatar = undefined;
+    await req.user.save();
+    res.send();
+});
 
 module.exports = router;

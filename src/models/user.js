@@ -54,7 +54,10 @@ const userSchema = new mongoose.Schema({
                required: true
            } 
         }
-    ]
+    ],
+    avatar: {
+        type: Buffer,      
+    }
 }, {
     // with this setting - created_at and updated_at fields are created automatically
     timestamps: true
