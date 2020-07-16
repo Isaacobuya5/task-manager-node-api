@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require('multer');
+const sharp = require('sharp');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 
@@ -165,8 +166,13 @@ const upload = multer({
 //users/me/avatar
 // save to folder avatar
 router.post('/users/me/avatar',auth, upload.single('avatar') , async (req, res) => {
+    const buffer = await sharp(req.file.buffer)
+    .png()
+    .resize({ width: 250, height: 250})
+    .toBuffer();
     // we can access the image on req.file
-     req.user.avatar = req.file.buffer;
+    //  req.user.avatar = req.file.buffer;
+    req.user.avatar = buffer;
      await req.user.save();
     res.send();
 }, (error,req, res, next) => {
@@ -188,7 +194,7 @@ router.get('/users/:id/avatar', async (req, res) => {
         }
         // a. we need to send back the correct data
         // b. need to tell the requestor the type of data they are getting back i.e. png, jpg etc
-        res.set('Content-Type','image/jpg');
+        res.set('Content-Type','image/png');
         res.send(user.avatar);
 
     } catch (e) {
