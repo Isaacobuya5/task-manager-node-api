@@ -1,6 +1,6 @@
 
 const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey('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');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendWelcomeEmail = (email, name) => {
     sgMail.send({

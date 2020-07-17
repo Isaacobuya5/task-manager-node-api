@@ -95,7 +95,7 @@ userSchema.methods.generateAuthToken = async function() {
 
     // generate a token
     // pass payload that uniquely identifies the user and the signature as the arguments
-    const token = await jwt.sign({ _id: user._id.toString() }, 'thisismyexample');
+    const token = await jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
     // add the token to the tokens array
     user.tokens = user.tokens.concat({ token });
     // save the user with the given token 

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 // We need connectionURL to connect to MongoDB
-const connectionURL = "mongodb://127.0.0.1:27017/task-manager-api";
+
 // connect to the database 
 // almost same as MongoDB.connect except that we provide also specify database name as part of the URL
-mongoose.connect(connectionURL, {
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     useNewUrlParser: true,
     useCreateIndex: true, // ensures that when mongoose is working with mongodb, indexes are created
     // removes the deprecation wraning for findByIdAndUpdate and other methods
