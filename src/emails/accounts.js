@@ -11,8 +11,18 @@ const sendWelcomeEmail = (email, name) => {
     })
 }
 
+const sendGoodByeEmail = (email, name) => {
+    sgMail.send({
+        to: email,
+        from: 'szack4477@gmail.com',
+        subject: 'Good bye user',
+        text: `We appreaciate u ${name} for being with us for a short time. You can always come back any time`
+    })
+}
+
 module.exports = {
-    sendWelcomeEmail
+    sendWelcomeEmail,
+    sendGoodByeEmail
 }
 
 // const msg = {
