@@ -26,11 +26,27 @@ beforeEach(async() => {
 
 
 test('Should signup a new user', async () => {
-    await request(app).post('/users').send({
+    const response = await request(app).post('/users').send({
         name: 'tom',
         email: 'tomonyango@gmail.com',
         password: 'qwerty1234'
     }).expect(201)
+
+    // Assert test that the database was changed correctly
+    const user = await User.findById(response.body.user._id);
+    expect(user).not.toBeNull();
+
+    // Assertions about response
+    expect(response.body).toMatchObject({
+        user: {
+            name: 'tom',
+            email: 'tomonyango@gmail.com'
+        },
+        token: user.tokens[0].token
+    });
+
+    // assert about password
+    expect(user.password).not.toBe('qwerty1234')
 });
 
 test('Should login an existing user', async () => {
@@ -75,3 +91,8 @@ test('Should not delete account for unauthenticated user', async () => {
     .send()
     .expect(401)
 })
+
+/** 
+ * More things that we can test
+ *
+*/
