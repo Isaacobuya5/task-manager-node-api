@@ -1,12 +1,4 @@
-const express = require('express');
-// ensures that the file mongoose js runs
-require('./db/mongoose');
-// routers
-const userRouter = require("./routers/user");
-const taskRouter = require("./routers/task");
-
-
-const app = express();
+const app = require('./app');
 const port = process.env.PORT;
 
 
@@ -28,13 +20,13 @@ const port = process.env.PORT;
 //creating a new user
 // we need to configure express to automatically parse for us the 
 // JSON information passed in request body
-app.use(express.json()); // will automatically parse the incoming JSON data into an object that we can the save into database
+// app.use(express.json()); // will automatically parse the incoming JSON data into an object that we can the save into database
 
-// we have to register router with express application
-app.use(userRouter, taskRouter);
+// // we have to register router with express application
+// app.use(userRouter, taskRouter);
 
 
-app.listen(port, () => console.log(`Server listening on port ${port}`));
+// app.listen(port, () => console.log(`Server listening on port ${port}`));
 
 // practice bcrypt
 /**
@@ -79,6 +71,10 @@ app.listen(port, () => console.log(`Server listening on port ${port}`));
 // }
 
 // console.log(JSON.stringify(pet));
+
+app.listen(port, () => {
+    console.log("Server is up on port" + port)
+});
 
 const multer = require('multer');
 const upload = multer({
