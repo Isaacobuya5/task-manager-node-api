@@ -50,10 +50,15 @@ test('Should signup a new user', async () => {
 });
 
 test('Should login an existing user', async () => {
-    await request(app).post('/users/login').send({
+    const response = await request(app).post('/users/login').send({
         email: userOne.email,
         password: userOne.password
     }).expect(200)
+
+   // Validate that user token is saved
+   const user = await User.findById(userOneId);
+   expect(response.body.token).toBe(user.tokens[1].token);
+
 });
 
 test('Should not login non-existent user', async () => {
@@ -83,6 +88,10 @@ test('Should delete account for user', async () => {
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200)
+
+    // Assert that the user was actually removed
+    const user = await User.findById(userOneId);
+    expect(user).toBeNull();
 })
 
 test('Should not delete account for unauthenticated user', async () => {
