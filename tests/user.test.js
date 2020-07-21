@@ -53,4 +53,10 @@ test('Should get profile for user', async () => {
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200)
+});
+
+test('Should not get profile for unauthenticated user', async () => {
+    await request(app)
+    .get('/users/me')
+    .expect(401);
 })
