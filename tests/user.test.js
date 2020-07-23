@@ -125,3 +125,30 @@ test('Should not update invalid user fields', async () => {
  * More things that we can test
  *
 */
+test('Should not signup user with invalid email', async () => {
+    await request(app)
+    .post('/users')
+    .send({
+        name: 'Tomaso',
+        email: 'examplegmail.com',
+        password: 'example12345'
+    }).expect(400)
+})
+
+test('Should not signup user with invalid password', async () => {
+    await request(app)
+    .post('/users')
+    .send({
+        name: 'example',
+        email: 'user@example.com',
+        password: 'password1234'
+    }).expect(400)
+});
+
+test('Should not update a user if unauthenticated', async () => {
+    await request(app)
+    .patch('/users/me')
+    .send({
+        name: "Jonathan"
+    }).expect(401)
+})
