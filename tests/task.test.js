@@ -35,4 +35,41 @@ test('Should not succesfuly delete task for another user', async () => {
         .expect(404)
         const task = await Task.findById(taskOne._id);
         expect(task).not.toBeNull();
+});
+
+test('Should not create task with invalid completed status', async () => {
+    await request(app)
+        .post('/tasks')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            description: 'example task',
+            completed: 12233
+        }).expect(400)
+})
+
+test('Should delete a user task succesfully', async () => {
+    await request(app)
+        .delete(`/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+        const task = await Task.findById(taskOne._id);
+        expect(task).toBeNull()
+})
+
+test('Should not delete a task if unauthenticated', async () => {
+    await request(app)
+    .delete(`/tasks/${taskOne._id}`)
+    .send()
+    .expect(401)
+})
+
+test('Should not update task with invalid description', async () => {
+    await request(app)
+        .patch(`/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            completed: 56565
+        }).expect(400)
+
 })
